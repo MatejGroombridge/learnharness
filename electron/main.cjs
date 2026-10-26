@@ -479,6 +479,14 @@ function setupAutoUpdater() {
 		log("auto-update: dev build — updater disabled");
 		return;
 	}
+	// Local fork (local-models branch): the baked feed is upstream's GitHub
+	// Releases, whose builds lack the fork's changes — an update would swap
+	// this build for stock. Updates come via git (merge upstream, rebuild);
+	// only an explicit LH_UPDATE_FEED re-enables the updater.
+	if (!process.env.LH_UPDATE_FEED) {
+		log("auto-update: local fork build — updater disabled");
+		return;
+	}
 	try {
 		autoUpdater = require("electron-updater").autoUpdater;
 	} catch (err) {
